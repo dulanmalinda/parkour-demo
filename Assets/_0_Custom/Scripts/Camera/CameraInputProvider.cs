@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Cinemachine;
+using UnityEngine.EventSystems;
 
 namespace ParkourLegion.Camera
 {
@@ -9,6 +10,9 @@ namespace ParkourLegion.Camera
         [SerializeField] private float mouseSensitivityX = 200f;
         [SerializeField] private float mouseSensitivityY = 2f;
         [SerializeField] private bool invertY = false;
+
+        [Header("WebGL Spike Protection")]
+        [SerializeField] private float maxDeltaThreshold = 50f;
 
         [Header("References")]
         [SerializeField] private CinemachineCamera cinemachineCamera;
@@ -36,7 +40,7 @@ namespace ParkourLegion.Camera
             }
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             HandleMouseInput();
             HandleCursorToggle();
@@ -46,16 +50,21 @@ namespace ParkourLegion.Camera
         {
             if (Cursor.lockState == CursorLockMode.Locked && orbitalFollow != null)
             {
-                float mouseX = Input.GetAxis("Mouse X") * mouseSensitivityX * Time.deltaTime;
-                float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivityY * Time.deltaTime;
+                float mouseX = Input.GetAxis("Mouse X");
+                float mouseY = Input.GetAxis("Mouse Y");
+
+                if (Mathf.Abs(mouseX) > maxDeltaThreshold || Mathf.Abs(mouseY) > maxDeltaThreshold)
+                {
+                    return;
+                }
 
                 if (invertY)
                 {
                     mouseY = -mouseY;
                 }
 
-                orbitalFollow.HorizontalAxis.Value += mouseX;
-                orbitalFollow.VerticalAxis.Value += mouseY;
+                orbitalFollow.HorizontalAxis.Value += mouseX * mouseSensitivityX;
+                orbitalFollow.VerticalAxis.Value += mouseY * mouseSensitivityY;
             }
         }
 
@@ -67,11 +76,20 @@ namespace ParkourLegion.Camera
                 {
                     UnlockCursor();
                 }
-                else
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (Cursor.lockState != CursorLockMode.Locked && !IsPointerOverUI())
                 {
                     LockCursor();
                 }
             }
+        }
+
+        private bool IsPointerOverUI()
+        {
+            return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
         }
 
         public void LockCursor()

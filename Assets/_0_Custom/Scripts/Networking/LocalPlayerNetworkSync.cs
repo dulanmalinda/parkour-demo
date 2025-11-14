@@ -15,6 +15,7 @@ namespace ParkourLegion.Networking
         private PlayerModelManager modelManager;
         private float updateTimer = 0f;
         private int lastMovementState = -1;
+        private int lastSkinId = -1;
         private bool skinInitialized = false;
 
         public void Initialize(ColyseusRoom<ParkourRoomState> room)
@@ -46,6 +47,7 @@ namespace ParkourLegion.Networking
             {
                 int skinId = localPlayerState.skinId;
                 modelManager.SetModel(skinId);
+                lastSkinId = skinId;
                 skinInitialized = true;
                 Debug.Log($"LocalPlayer initialized with skin: {skinId}");
             }
@@ -69,7 +71,7 @@ namespace ParkourLegion.Networking
 
         private void Update()
         {
-            if (modelManager == null || playerController == null)
+            if (modelManager == null || playerController == null || room == null)
             {
                 return;
             }
@@ -79,6 +81,28 @@ namespace ParkourLegion.Networking
             {
                 modelManager.UpdateAnimation(currentMovementState);
                 lastMovementState = currentMovementState;
+            }
+
+            CheckSkinIdChange();
+        }
+
+        private void CheckSkinIdChange()
+        {
+            if (room == null || modelManager == null)
+            {
+                return;
+            }
+
+            var localPlayerState = room.State.players[room.SessionId];
+            if (localPlayerState != null)
+            {
+                int currentSkinId = localPlayerState.skinId;
+                if (currentSkinId != lastSkinId)
+                {
+                    modelManager.SetModel(currentSkinId);
+                    lastSkinId = currentSkinId;
+                    Debug.Log($"LocalPlayer skin changed to: {currentSkinId}");
+                }
             }
         }
 

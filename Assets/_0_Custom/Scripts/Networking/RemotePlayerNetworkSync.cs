@@ -14,6 +14,7 @@ namespace ParkourLegion.Networking
         private Vector3 targetPosition;
         private float targetRotationY;
         private int lastMovementState = -1;
+        private int lastSkinId = -1;
 
         public void Initialize(Schema.PlayerState state)
         {
@@ -33,6 +34,7 @@ namespace ParkourLegion.Networking
             else
             {
                 modelManager.SetModel(state.skinId);
+                lastSkinId = state.skinId;
                 lastMovementState = state.movementState;
                 modelManager.UpdateAnimation(lastMovementState);
             }
@@ -59,10 +61,20 @@ namespace ParkourLegion.Networking
                 Time.deltaTime * interpolationSpeed
             );
 
-            if (modelManager != null && playerState.movementState != lastMovementState)
+            if (modelManager != null)
             {
-                modelManager.UpdateAnimation(playerState.movementState);
-                lastMovementState = playerState.movementState;
+                if (playerState.movementState != lastMovementState)
+                {
+                    modelManager.UpdateAnimation(playerState.movementState);
+                    lastMovementState = playerState.movementState;
+                }
+
+                if (playerState.skinId != lastSkinId)
+                {
+                    modelManager.SetModel(playerState.skinId);
+                    lastSkinId = playerState.skinId;
+                    Debug.Log($"RemotePlayer skin changed to: {playerState.skinId}");
+                }
             }
         }
     }
