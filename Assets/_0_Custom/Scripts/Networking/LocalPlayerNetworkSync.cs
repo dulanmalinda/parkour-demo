@@ -15,6 +15,7 @@ namespace ParkourLegion.Networking
         private PlayerModelManager modelManager;
         private float updateTimer = 0f;
         private int lastMovementState = -1;
+        private bool skinInitialized = false;
 
         public void Initialize(ColyseusRoom<ParkourRoomState> room)
         {
@@ -31,20 +32,22 @@ namespace ParkourLegion.Networking
             {
                 Debug.LogWarning("PlayerModelManager not found on LocalPlayer!");
             }
-            else
+        }
+
+        public void InitializeSkin()
+        {
+            if (skinInitialized || modelManager == null || room == null)
             {
-                int availableModels = modelManager.GetAvailableModelCount();
-                if (availableModels > 0)
-                {
-                    int randomSkin = Random.Range(0, availableModels);
-                    room.Send("selectSkin", new { skinId = randomSkin });
-                    modelManager.SetModel(randomSkin);
-                    Debug.Log($"LocalPlayer selected skin: {randomSkin} (out of {availableModels} available)");
-                }
-                else
-                {
-                    Debug.LogError("No models found in GFXs container!");
-                }
+                return;
+            }
+
+            var localPlayerState = room.State.players[room.SessionId];
+            if (localPlayerState != null)
+            {
+                int skinId = localPlayerState.skinId;
+                modelManager.SetModel(skinId);
+                skinInitialized = true;
+                Debug.Log($"LocalPlayer initialized with skin: {skinId}");
             }
         }
 

@@ -51,8 +51,15 @@ namespace ParkourLegion.Networking
 
             try
             {
-                room = await client.JoinOrCreate<ParkourRoomState>(roomName);
-                Debug.Log($"Connected to room: {room.Id}, Session: {room.SessionId}");
+                int randomSkinId = Random.Range(0, 4);
+
+                var options = new Dictionary<string, object>
+                {
+                    { "skinId", randomSkinId }
+                };
+
+                room = await client.JoinOrCreate<ParkourRoomState>(roomName, options);
+                Debug.Log($"Connected to room: {room.Id}, Session: {room.SessionId}, Selected skinId: {randomSkinId}");
 
                 SetupRoomHandlers();
                 SpawnLocalPlayer();
@@ -154,6 +161,12 @@ namespace ParkourLegion.Networking
                     Vector3 serverPosition = new Vector3(playerState.x, playerState.y, playerState.z);
                     localPlayer.transform.position = serverPosition;
                     Debug.Log($"Local player synced to server spawn position: {serverPosition}");
+
+                    LocalPlayerNetworkSync networkSync = localPlayer.GetComponent<LocalPlayerNetworkSync>();
+                    if (networkSync != null)
+                    {
+                        networkSync.InitializeSkin();
+                    }
                 }
             });
         }
