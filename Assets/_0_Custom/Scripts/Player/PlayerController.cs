@@ -25,6 +25,7 @@ namespace ParkourLegion.Player
 
         private Vector3 velocity;
         private bool isGrounded;
+        private bool movementEnabled = false;
 
         public CharacterController CharacterController => characterController;
         public PlayerInputHandler InputHandler => inputHandler;
@@ -33,6 +34,7 @@ namespace ParkourLegion.Player
         public Transform CameraTransform { get => cameraTransform; set => cameraTransform = value; }
         public Vector3 Velocity { get => velocity; set => velocity = value; }
         public bool IsGrounded => isGrounded;
+        public bool MovementEnabled { get => movementEnabled; set => movementEnabled = value; }
 
         public float WalkSpeed => walkSpeed;
         public float RunSpeed => runSpeed;
@@ -58,6 +60,8 @@ namespace ParkourLegion.Player
 
         private void Update()
         {
+            if (!movementEnabled) return;
+
             inputHandler.Update();
             isGrounded = physics.CheckGrounded(characterController, transform);
             stateMachine.Update();

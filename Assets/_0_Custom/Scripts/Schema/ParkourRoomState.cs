@@ -10,5 +10,14 @@ namespace ParkourLegion.Schema
 
         [Colyseus.Schema.Type(2, "boolean")]
         public bool raceStarted = false;
+
+        [Colyseus.Schema.Type(3, "string")]
+        public string gameState = "waiting";
+
+        [Colyseus.Schema.Type(4, "uint8")]
+        public byte countdownValue = 0;
+
+        [Colyseus.Schema.Type(5, "uint8")]
+        public byte playerCount = 0;
     }
 }

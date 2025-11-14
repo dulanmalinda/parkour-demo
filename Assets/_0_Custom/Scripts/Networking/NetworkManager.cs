@@ -23,6 +23,8 @@ namespace ParkourLegion.Networking
         private ColyseusRoom<ParkourRoomState> room;
         private GameObject localPlayer;
         private Dictionary<string, GameObject> remotePlayers = new Dictionary<string, GameObject>();
+        private string lastGameState = "";
+        private byte lastCountdownValue = 0;
 
         public static NetworkManager Instance { get; private set; }
         public ColyseusRoom<ParkourRoomState> Room => room;
@@ -40,9 +42,23 @@ namespace ParkourLegion.Networking
             DontDestroyOnLoad(gameObject);
         }
 
-        private async void Start()
+        private void Start()
         {
+        }
+
+        public async void ConnectAndJoin()
+        {
+            if (UI.GameUIManager.Instance != null)
+            {
+                UI.GameUIManager.Instance.SetState(UI.GameState.Connecting);
+            }
+
             await ConnectToServer();
+
+            if (UI.GameUIManager.Instance != null)
+            {
+                UI.GameUIManager.Instance.SetState(UI.GameState.Waiting);
+            }
         }
 
         private async Task ConnectToServer()
@@ -67,6 +83,11 @@ namespace ParkourLegion.Networking
             catch (System.Exception e)
             {
                 Debug.LogError($"Failed to connect to server: {e.Message}");
+
+                if (UI.GameUIManager.Instance != null)
+                {
+                    UI.GameUIManager.Instance.SetState(UI.GameState.Menu);
+                }
             }
         }
 
@@ -95,6 +116,24 @@ namespace ParkourLegion.Networking
                     {
                         RemoveRemotePlayer(key);
                     });
+                }
+            };
+
+            room.OnStateChange += (state, isFirstState) =>
+            {
+                if (!isFirstState)
+                {
+                    if (state.gameState != lastGameState)
+                    {
+                        lastGameState = state.gameState;
+                        HandleGameStateChange(state.gameState);
+                    }
+
+                    if (state.countdownValue != lastCountdownValue)
+                    {
+                        lastCountdownValue = state.countdownValue;
+                        HandleCountdownUpdate(state.countdownValue);
+                    }
                 }
             };
 
@@ -241,6 +280,52 @@ namespace ParkourLegion.Networking
             if (room != null)
             {
                 await room.Leave();
+            }
+        }
+
+        private void HandleGameStateChange(string newState)
+        {
+            Debug.Log($"Game state changed to: {newState}");
+
+            if (UI.GameUIManager.Instance == null) return;
+
+            switch (newState)
+            {
+                case "waiting":
+                    UI.GameUIManager.Instance.SetState(UI.GameState.Waiting);
+                    break;
+                case "countdown":
+                    UI.GameUIManager.Instance.SetState(UI.GameState.Countdown);
+                    break;
+                case "playing":
+                    UI.GameUIManager.Instance.SetState(UI.GameState.Playing);
+                    EnableLocalPlayerMovement();
+                    break;
+            }
+        }
+
+        private void HandleCountdownUpdate(byte countdown)
+        {
+            Debug.Log($"Countdown: {countdown}");
+
+            if (UI.GameUIManager.Instance != null &&
+                UI.GameUIManager.Instance.CurrentState == UI.GameState.Countdown)
+            {
+                var lobbyUI = FindObjectOfType<UI.LobbyUI>();
+                lobbyUI?.ShowCountdown(countdown);
+            }
+        }
+
+        private void EnableLocalPlayerMovement()
+        {
+            if (localPlayer != null)
+            {
+                var controller = localPlayer.GetComponent<Player.PlayerController>();
+                if (controller != null)
+                {
+                    controller.MovementEnabled = true;
+                    Debug.Log("Local player movement enabled");
+                }
             }
         }
     }
