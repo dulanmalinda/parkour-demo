@@ -127,7 +127,7 @@ public byte skinId = 0;
 
 **Animator Parameters:**
 ```
-Int: movementState (0-5)
+Int: state (0-5)
 ```
 
 **State Machine:**
@@ -141,7 +141,7 @@ Slide (state == 5)
 ```
 
 **Transitions:**
-- Transitions triggered by `movementState` parameter changes
+- Transitions triggered by `state` parameter changes
 - No exit time (immediate transitions)
 - All states can transition to any other state
 
@@ -183,7 +183,8 @@ namespace ParkourLegion.Player
   - Validate skinId range (0-17)
 
 - **UpdateAnimation(movementState):**
-  - Set integer parameter on cached activeAnimator
+  - Set "state" integer parameter on cached activeAnimator
+  - activeAnimator.SetInteger("state", movementState)
   - Only update if animator reference is valid
 
 ---
@@ -287,11 +288,11 @@ this.onMessage("selectSkin", (client, message) => {
 ## 📋 **Implementation Checklist**
 
 ### **Phase 1: Schema Updates**
-- [ ] Add `skinId` to server PlayerState.ts
-- [ ] Add `skinId` to Unity PlayerState.cs (match index number!)
-- [ ] Add "selectSkin" message handler on server
-- [ ] Test server compiles and runs
-- [ ] Verify schema field syncs properly
+- [x] Add `skinId` to server PlayerState.ts
+- [x] Add `skinId` to Unity PlayerState.cs (match index number!)
+- [x] Add "selectSkin" message handler on server
+- [x] Test server compiles and runs
+- [ ] Verify schema field syncs properly (requires runtime testing)
 
 ### **Phase 2: Prefab Hierarchy Verification**
 - [✅] Verify LocalPlayer.prefab has GFXs GameObject with all models
@@ -303,38 +304,38 @@ this.onMessage("selectSkin", (client, message) => {
 
 ### **Phase 3: Animator Controller Setup**
 - [ ] Create shared AnimatorController (or verify existing)
-- [ ] Add `movementState` integer parameter (0-5)
+- [ ] Verify `state` integer parameter exists (0-5)
 - [ ] Create 6 animation states (Idle, Walk, Run, Jump, Fall, Slide)
-- [ ] Configure transitions with movementState conditions
+- [ ] Configure transitions with `state` parameter conditions
 - [ ] Set transition settings (no exit time, 0.1-0.25s duration)
 - [ ] Test in Animator window with manual parameter changes
 - [ ] Assign controller to all 18 character model Animators
 
 ### **Phase 4: PlayerModelManager Implementation**
-- [ ] Create PlayerModelManager.cs script in Scripts/Player/
-- [ ] Implement SetModel(skinId) method (enable/disable logic)
-- [ ] Implement UpdateAnimation(movementState) method
-- [ ] Implement DisableAllModels() helper method
-- [ ] Add skinId validation and fallback to 0
-- [ ] Add null checks for animator reference
+- [x] Create PlayerModelManager.cs script in Scripts/Player/
+- [x] Implement SetModel(skinId) method (enable/disable logic)
+- [x] Implement UpdateAnimation(movementState) method
+- [x] Implement DisableAllModels() helper method
+- [x] Add skinId validation and fallback to 0
+- [x] Add null checks for animator reference
 
 ### **Phase 5: Local Player Integration**
-- [ ] Add PlayerModelManager to LocalPlayer prefab
-- [ ] Assign gfxsContainer reference to GFXs GameObject
-- [ ] Modify LocalPlayerNetworkSync to pick random skinId
-- [ ] Send "selectSkin" message to server on spawn
-- [ ] Call SetModel(skinId) after sending message
-- [ ] Hook UpdateAnimation() to PlayerController state changes
-- [ ] Test with single player instance
+- [x] Add PlayerModelManager to LocalPlayer prefab (Unity Editor required)
+- [x] Assign gfxsContainer reference to GFXs GameObject (Unity Editor required)
+- [x] Modify LocalPlayerNetworkSync to pick random skinId
+- [x] Send "selectSkin" message to server on spawn
+- [x] Call SetModel(skinId) after sending message
+- [x] Hook UpdateAnimation() to PlayerController state changes
+- [ ] Test with single player instance (runtime testing required)
 
 ### **Phase 6: Remote Player Integration**
-- [ ] Add PlayerModelManager to RemotePlayer prefab
-- [ ] Assign gfxsContainer reference to GFXs GameObject
-- [ ] Modify RemotePlayerNetworkSync.Initialize() to read skinId
-- [ ] Call SetModel(skinId) in Initialize()
-- [ ] Add movementState change detection in Update()
-- [ ] Call UpdateAnimation() when state changes
-- [ ] Test with multi-client setup
+- [x] Add PlayerModelManager to RemotePlayer prefab (Unity Editor required)
+- [x] Assign gfxsContainer reference to GFXs GameObject (Unity Editor required)
+- [x] Modify RemotePlayerNetworkSync.Initialize() to read skinId
+- [x] Call SetModel(skinId) in Initialize()
+- [x] Add movementState change detection in Update()
+- [x] Call UpdateAnimation() when state changes
+- [ ] Test with multi-client setup (runtime testing required)
 
 ### **Phase 7: Testing**
 - [ ] Test local player model appears (random skin)
@@ -447,7 +448,7 @@ Ready to begin implementation in this order:
 1. Server stores skinId → syncs to all clients
 2. Client enables model at GFXs.children[skinId]
 3. Caches active Animator reference
-4. Updates Animator.SetInteger("movementState", value) on state changes
+4. Updates Animator.SetInteger("state", value) on state changes
 
 **Benefits of This Approach:**
 - ✅ Simple and straightforward

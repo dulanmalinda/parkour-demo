@@ -28,5 +28,8 @@ namespace ParkourLegion.Schema
 
         [Colyseus.Schema.Type(8, "uint8")]
         public byte lastCheckpoint = 0;
+
+        [Colyseus.Schema.Type(9, "uint8")]
+        public byte skinId = 0;
     }
 }

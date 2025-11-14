@@ -12,16 +12,39 @@ namespace ParkourLegion.Networking
 
         private ColyseusRoom<ParkourRoomState> room;
         private PlayerController playerController;
+        private PlayerModelManager modelManager;
         private float updateTimer = 0f;
+        private int lastMovementState = -1;
 
         public void Initialize(ColyseusRoom<ParkourRoomState> room)
         {
             this.room = room;
             playerController = GetComponent<PlayerController>();
+            modelManager = GetComponent<PlayerModelManager>();
 
             if (playerController == null)
             {
                 Debug.LogError("PlayerController not found on LocalPlayer!");
+            }
+
+            if (modelManager == null)
+            {
+                Debug.LogWarning("PlayerModelManager not found on LocalPlayer!");
+            }
+            else
+            {
+                int availableModels = modelManager.GetAvailableModelCount();
+                if (availableModels > 0)
+                {
+                    int randomSkin = Random.Range(0, availableModels);
+                    room.Send("selectSkin", new { skinId = randomSkin });
+                    modelManager.SetModel(randomSkin);
+                    Debug.Log($"LocalPlayer selected skin: {randomSkin} (out of {availableModels} available)");
+                }
+                else
+                {
+                    Debug.LogError("No models found in GFXs container!");
+                }
             }
         }
 
@@ -38,6 +61,21 @@ namespace ParkourLegion.Networking
             {
                 SendPositionUpdate();
                 updateTimer = 0f;
+            }
+        }
+
+        private void Update()
+        {
+            if (modelManager == null || playerController == null)
+            {
+                return;
+            }
+
+            int currentMovementState = playerController.GetMovementStateInt();
+            if (currentMovementState != lastMovementState)
+            {
+                modelManager.UpdateAnimation(currentMovementState);
+                lastMovementState = currentMovementState;
             }
         }
 

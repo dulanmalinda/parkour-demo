@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 2021623975125531498}
   - component: {fileID: 840798978335199536}
   - component: {fileID: 2399376841268870574}
+  - component: {fileID: -8338013902267904097}
   m_Layer: 0
   m_Name: RemotePlayer
   m_TagString: Untagged
@@ -179,6 +180,19 @@ MonoBehaviour:
   jumpColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   fallColor: {r: 1, g: 0, b: 0, a: 1}
   slideColor: {r: 1, g: 0, b: 1, a: 1}
+--- !u!114 &-8338013902267904097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7428352097917500527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3639afb4f636a3c44ac30345fd9b1682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ParkourLegion.Player.PlayerModelManager
+  gfxsContainer: {fileID: 7250038993724487051}
 --- !u!1001 &9176628308514599131
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -242,6 +256,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f593e21e415dbe242964aa5b42de084c, type: 3}
       propertyPath: m_Name
       value: character-a
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f593e21e415dbe242964aa5b42de084c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

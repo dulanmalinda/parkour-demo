@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5966472464804516532}
   - component: {fileID: 2643748429097617286}
   - component: {fileID: 6697474480298744726}
+  - component: {fileID: -5383986713168709327}
   m_Layer: 6
   m_Name: LocalPlayer
   m_TagString: Player
@@ -154,6 +155,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParkourLegion.Networking.LocalPlayerNetworkSync
   updateRate: 0.05
+--- !u!114 &-5383986713168709327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1983201314651199400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3639afb4f636a3c44ac30345fd9b1682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ParkourLegion.Player.PlayerModelManager
+  gfxsContainer: {fileID: 4311530510183123549}
 --- !u!1 &4936178862248659989
 GameObject:
   m_ObjectHideFlags: 0
