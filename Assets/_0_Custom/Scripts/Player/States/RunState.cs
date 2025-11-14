@@ -15,10 +15,19 @@ namespace ParkourLegion.Player.States
         public override void Update()
         {
             Vector2 input = controller.InputHandler.MovementInput;
-            Vector3 moveDirection = controller.transform.right * input.x + controller.transform.forward * input.y;
-            moveDirection.Normalize();
+            Vector3 moveDirection = controller.GetCameraRelativeMovement(input);
 
-            controller.Move(moveDirection * controller.RunSpeed);
+            if (moveDirection.magnitude > 0.1f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+                controller.transform.rotation = Quaternion.Slerp(
+                    controller.transform.rotation,
+                    targetRotation,
+                    Time.deltaTime * 10f
+                );
+
+                controller.Move(moveDirection.normalized * controller.RunSpeed);
+            }
 
             Vector3 velocity = controller.Velocity;
             controller.Physics.ApplyGravity(ref velocity, controller.IsGrounded, Time.deltaTime);

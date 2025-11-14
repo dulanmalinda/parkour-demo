@@ -21,6 +21,7 @@ namespace ParkourLegion.Player
         private PlayerInputHandler inputHandler;
         private PlayerPhysics physics;
         private PlayerStateMachine stateMachine;
+        private Transform cameraTransform;
 
         private Vector3 velocity;
         private bool isGrounded;
@@ -29,6 +30,7 @@ namespace ParkourLegion.Player
         public PlayerInputHandler InputHandler => inputHandler;
         public PlayerPhysics Physics => physics;
         public PlayerStateMachine StateMachine => stateMachine;
+        public Transform CameraTransform { get => cameraTransform; set => cameraTransform = value; }
         public Vector3 Velocity { get => velocity; set => velocity = value; }
         public bool IsGrounded => isGrounded;
 
@@ -50,6 +52,7 @@ namespace ParkourLegion.Player
 
         private void Start()
         {
+            cameraTransform = UnityEngine.Camera.main.transform;
             stateMachine.ChangeState<States.IdleState>();
         }
 
@@ -68,6 +71,25 @@ namespace ParkourLegion.Player
         public void ApplyVelocity()
         {
             characterController.Move(velocity * Time.deltaTime);
+        }
+
+        public Vector3 GetCameraRelativeMovement(Vector2 input)
+        {
+            if (cameraTransform == null)
+            {
+                return transform.right * input.x + transform.forward * input.y;
+            }
+
+            Vector3 forward = cameraTransform.forward;
+            Vector3 right = cameraTransform.right;
+
+            forward.y = 0f;
+            right.y = 0f;
+
+            forward.Normalize();
+            right.Normalize();
+
+            return forward * input.y + right * input.x;
         }
 
         private void InitializeStates()
