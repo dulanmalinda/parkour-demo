@@ -29,6 +29,8 @@ namespace ParkourLegion.Networking
                 return;
             }
 
+            Debug.Log($"[RemotePlayerController] Initialized. Renderer: {playerRenderer.name}, Material: {playerRenderer.material.shader.name}");
+
             propertyBlock = new MaterialPropertyBlock();
             UpdateVisuals();
         }
@@ -37,6 +39,7 @@ namespace ParkourLegion.Networking
         {
             if (playerState != null && playerState.movementState != lastMovementState)
             {
+                Debug.Log($"[RemotePlayerController] Movement state changed: {lastMovementState} -> {playerState.movementState}");
                 UpdateVisuals();
                 lastMovementState = playerState.movementState;
             }
@@ -70,8 +73,11 @@ namespace ParkourLegion.Networking
                     break;
             }
 
+            Debug.Log($"[RemotePlayerController] Setting color for state {playerState.movementState}: {targetColor}");
+
             playerRenderer.GetPropertyBlock(propertyBlock);
             propertyBlock.SetColor("_Color", targetColor);
+            propertyBlock.SetColor("_BaseColor", targetColor);
             playerRenderer.SetPropertyBlock(propertyBlock);
         }
     }

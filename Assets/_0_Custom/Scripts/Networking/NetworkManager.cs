@@ -69,6 +69,7 @@ namespace ParkourLegion.Networking
             {
                 if (isFirstState)
                 {
+                    UpdateLocalPlayerPositionFromState(state);
                     SpawnExistingPlayersFromState(state);
 
                     var callbacks = Colyseus.Schema.Callbacks.Get(room);
@@ -140,6 +141,21 @@ namespace ParkourLegion.Networking
                 cinemachineCamera.Follow = cameraTarget;
                 cinemachineCamera.LookAt = cameraTarget;
             }
+        }
+
+        private void UpdateLocalPlayerPositionFromState(ParkourRoomState state)
+        {
+            if (state?.players == null || localPlayer == null) return;
+
+            state.players.ForEach((sessionId, playerState) =>
+            {
+                if (sessionId == room.SessionId)
+                {
+                    Vector3 serverPosition = new Vector3(playerState.x, playerState.y, playerState.z);
+                    localPlayer.transform.position = serverPosition;
+                    Debug.Log($"Local player synced to server spawn position: {serverPosition}");
+                }
+            });
         }
 
         private void SpawnExistingPlayersFromState(ParkourRoomState state)

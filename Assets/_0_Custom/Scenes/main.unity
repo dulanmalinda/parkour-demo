@@ -242,7 +242,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 65.34014
+  field of view: 80
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -821,7 +821,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
-    FieldOfView: 65.34014
+    FieldOfView: 80
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -906,7 +906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667a65fd0be8b604fb8c212d107c9e90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParkourLegion.Camera.CameraInputProvider
-  mouseSensitivityX: 200
+  mouseSensitivityX: 250
   mouseSensitivityY: 40
   invertY: 1
   cinemachineCamera: {fileID: 0}
