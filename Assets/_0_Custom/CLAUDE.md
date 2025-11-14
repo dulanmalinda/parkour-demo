@@ -268,8 +268,9 @@ stateDiagram-v2
 
 When user says **"load project"**:
 1. Enter Research Mode
-2. Delegate to research-scout: `"load project"`
-3. Present findings to user
+2. Survey current script implementations to understand the codebase
+3. Identify key systems, patterns, and architectural decisions
+4. Present findings to user with organized summary
 
 ---
 

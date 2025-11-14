@@ -92,6 +92,17 @@ namespace ParkourLegion.Player
             return forward * input.y + right * input.x;
         }
 
+        public int GetMovementStateInt()
+        {
+            if (stateMachine.CurrentState is States.IdleState) return 0;
+            if (stateMachine.CurrentState is States.WalkState) return 1;
+            if (stateMachine.CurrentState is States.RunState) return 2;
+            if (stateMachine.CurrentState is States.JumpState) return 3;
+            if (stateMachine.CurrentState is States.FallState) return 4;
+            if (stateMachine.CurrentState is States.SlideState) return 5;
+            return 0;
+        }
+
         private void InitializeStates()
         {
             stateMachine.AddState(new States.IdleState(this));
