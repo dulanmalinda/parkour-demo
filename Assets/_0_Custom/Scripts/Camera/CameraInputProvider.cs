@@ -27,6 +27,12 @@ namespace ParkourLegion.Camera
             {
                 orbitalFollow = cinemachineCamera.GetComponent<CinemachineOrbitalFollow>();
                 inputAxisController = cinemachineCamera.GetComponent<CinemachineInputAxisController>();
+
+                if (orbitalFollow != null)
+                {
+                    orbitalFollow.HorizontalAxis.Value = 0f;
+                    orbitalFollow.VerticalAxis.Value = 0f;
+                }
             }
 
             LockCursor();

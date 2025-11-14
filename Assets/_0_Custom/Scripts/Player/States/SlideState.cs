@@ -24,7 +24,6 @@ namespace ParkourLegion.Player.States
             originalCenter = controller.CharacterController.center;
 
             controller.CharacterController.height = originalHeight * 0.5f;
-            controller.CharacterController.center = new Vector3(0, controller.CharacterController.height / 2f, 0);
         }
 
         public override void Update()
@@ -46,7 +45,6 @@ namespace ParkourLegion.Player.States
         public override void Exit()
         {
             controller.CharacterController.height = originalHeight;
-            controller.CharacterController.center = originalCenter;
         }
 
         public override void CheckTransitions()

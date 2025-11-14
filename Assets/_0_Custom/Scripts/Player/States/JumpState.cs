@@ -20,8 +20,7 @@ namespace ParkourLegion.Player.States
         public override void Update()
         {
             Vector2 input = controller.InputHandler.MovementInput;
-            Vector3 moveDirection = controller.transform.right * input.x + controller.transform.forward * input.y;
-            moveDirection.Normalize();
+            Vector3 moveDirection = controller.GetCameraRelativeMovement(input);
 
             controller.Move(moveDirection * controller.RunSpeed * airControlMultiplier);
 

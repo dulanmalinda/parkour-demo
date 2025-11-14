@@ -133,11 +133,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParkourLegion.Player.PlayerController
   walkSpeed: 5
-  runSpeed: 8
+  runSpeed: 10
   jumpHeight: 2
-  slideSpeed: 10
+  slideSpeed: 12
   slideDuration: 1
-  gravity: -9.81
+  gravity: -20
   groundCheckDistance: 0.2
   groundLayer:
     serializedVersion: 2
