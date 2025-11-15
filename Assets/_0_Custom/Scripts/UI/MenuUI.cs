@@ -29,6 +29,7 @@ namespace ParkourLegion.UI
             CanvasScaler scaler = menuCanvas.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920, 1080);
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
 
             menuCanvas.AddComponent<GraphicRaycaster>();
 

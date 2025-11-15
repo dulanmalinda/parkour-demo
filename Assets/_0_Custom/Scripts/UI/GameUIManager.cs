@@ -81,7 +81,7 @@ namespace ParkourLegion.UI
 
         private void Update()
         {
-            if (currentState == GameState.Waiting)
+            if (currentState == GameState.Waiting || currentState == GameState.Countdown)
             {
                 lobbyUpdateTimer += Time.deltaTime;
                 if (lobbyUpdateTimer >= lobbyUpdateInterval)
