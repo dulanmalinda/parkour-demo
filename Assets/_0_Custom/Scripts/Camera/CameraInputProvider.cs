@@ -19,6 +19,7 @@ namespace ParkourLegion.Camera
 
         private CinemachineOrbitalFollow orbitalFollow;
         private CinemachineInputAxisController inputAxisController;
+        private CursorLockMode previousLockState = CursorLockMode.None;
 
         private void Start()
         {
@@ -44,6 +45,7 @@ namespace ParkourLegion.Camera
         {
             HandleMouseInput();
             HandleCursorToggle();
+            DetectExternalCursorUnlock();
         }
 
         private void HandleMouseInput()
@@ -72,10 +74,7 @@ namespace ParkourLegion.Camera
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (Cursor.lockState == CursorLockMode.Locked)
-                {
-                    UnlockCursor();
-                }
+                UnlockCursor();
             }
 
             if (Input.GetMouseButtonDown(0))
@@ -85,6 +84,16 @@ namespace ParkourLegion.Camera
                     LockCursor();
                 }
             }
+        }
+
+        private void DetectExternalCursorUnlock()
+        {
+            if (previousLockState == CursorLockMode.Locked && Cursor.lockState != CursorLockMode.Locked)
+            {
+                Cursor.visible = true;
+            }
+
+            previousLockState = Cursor.lockState;
         }
 
         private bool IsPointerOverUI()
