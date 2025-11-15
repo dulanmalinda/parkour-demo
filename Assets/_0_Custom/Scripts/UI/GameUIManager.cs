@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace ParkourLegion.UI
 {
@@ -20,6 +21,8 @@ namespace ParkourLegion.UI
         private LobbyUI lobbyUI;
 
         private GameState currentState = GameState.Menu;
+        private float lobbyUpdateTimer = 0f;
+        private readonly float lobbyUpdateInterval = 0.1f;
 
         public GameState CurrentState => currentState;
 
@@ -74,6 +77,38 @@ namespace ParkourLegion.UI
             InitializeSkinSelection();
 
             SetState(GameState.Menu);
+        }
+
+        private void Update()
+        {
+            if (currentState == GameState.Waiting)
+            {
+                lobbyUpdateTimer += Time.deltaTime;
+                if (lobbyUpdateTimer >= lobbyUpdateInterval)
+                {
+                    UpdateLobbyDisplay();
+                    lobbyUpdateTimer = 0f;
+                }
+            }
+        }
+
+        private void UpdateLobbyDisplay()
+        {
+            var networkManager = Networking.NetworkManager.Instance;
+            if (networkManager != null && networkManager.Room != null && lobbyUI != null)
+            {
+                string roomCode = networkManager.Room.State.roomCode;
+                lobbyUI.UpdateRoomCode(roomCode);
+
+                var playerStates = new Dictionary<string, bool>();
+                networkManager.Room.State.players.ForEach((sessionId, playerState) =>
+                {
+                    playerStates[sessionId] = playerState.isReady;
+                });
+
+                int playerCount = networkManager.Room.State.playerCount;
+                lobbyUI.UpdatePlayerList(playerCount, 4, playerStates);
+            }
         }
 
         private void InitializeSkinSelection()
@@ -134,7 +169,11 @@ namespace ParkourLegion.UI
 
                 case GameState.Waiting:
                     ShowLobbyUI();
-                    if (lobbyUI != null) lobbyUI.ShowWaiting();
+                    if (lobbyUI != null)
+                    {
+                        lobbyUI.ShowWaiting();
+                        lobbyUI.ResetReadyState();
+                    }
                     SetCursorState(false);
                     HideGameplayUI();
                     break;
@@ -186,6 +225,52 @@ namespace ParkourLegion.UI
             }
         }
 
+        public void OnCreateRoomClicked()
+        {
+            Debug.Log("Create room button clicked");
+
+            int skinId = UnityEngine.Random.Range(0, totalSkins);
+
+            var networkManager = Networking.NetworkManager.Instance;
+            if (networkManager != null)
+            {
+                networkManager.CreateRoom(skinId);
+            }
+            else
+            {
+                Debug.LogError("NetworkManager instance not found!");
+            }
+        }
+
+        public void OnJoinRoomClicked(string roomCode)
+        {
+            Debug.Log($"Join room button clicked: {roomCode}");
+
+            int skinId = UnityEngine.Random.Range(0, totalSkins);
+
+            var networkManager = Networking.NetworkManager.Instance;
+            if (networkManager != null)
+            {
+                networkManager.JoinRoomByCode(roomCode, skinId);
+            }
+            else
+            {
+                Debug.LogError("NetworkManager instance not found!");
+            }
+        }
+
+        public void OnReadyButtonClicked(bool ready)
+        {
+            Debug.Log($"Ready button clicked: {ready}");
+
+            var networkManager = Networking.NetworkManager.Instance;
+            if (networkManager != null)
+            {
+                networkManager.SetPlayerReady(ready);
+            }
+        }
+
+        [System.Obsolete("Use OnCreateRoomClicked() or OnJoinRoomClicked() instead")]
         public void OnPlayButtonClicked()
         {
             Debug.Log("Play button clicked - connecting to server");

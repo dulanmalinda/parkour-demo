@@ -19,5 +19,8 @@ namespace ParkourLegion.Schema
 
         [Colyseus.Schema.Type(5, "uint8")]
         public byte playerCount = 0;
+
+        [Colyseus.Schema.Type(6, "string")]
+        public string roomCode = "";
     }
 }

@@ -3,6 +3,7 @@ using Colyseus;
 using ParkourLegion.Schema;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine.Networking;
 
 namespace ParkourLegion.Networking
 {
@@ -46,6 +47,27 @@ namespace ParkourLegion.Networking
         {
         }
 
+        public async void CreateRoom(int skinId)
+        {
+            if (UI.GameUIManager.Instance != null)
+            {
+                UI.GameUIManager.Instance.SetState(UI.GameState.Connecting);
+            }
+
+            await CreateRoomAsync(skinId);
+        }
+
+        public async void JoinRoomByCode(string roomCode, int skinId)
+        {
+            if (UI.GameUIManager.Instance != null)
+            {
+                UI.GameUIManager.Instance.SetState(UI.GameState.Connecting);
+            }
+
+            await JoinRoomByCodeAsync(roomCode, skinId);
+        }
+
+        [System.Obsolete("Use CreateRoom() or JoinRoomByCode() instead")]
         public async void ConnectAndJoin()
         {
             if (UI.GameUIManager.Instance != null)
@@ -328,5 +350,115 @@ namespace ParkourLegion.Networking
                 }
             }
         }
+
+        private async Task CreateRoomAsync(int skinId)
+        {
+            client = new ColyseusClient(serverUrl);
+
+            try
+            {
+                var options = new Dictionary<string, object>
+                {
+                    { "skinId", skinId }
+                };
+
+                room = await client.Create<ParkourRoomState>("parkour", options);
+                Debug.Log($"Created room with code: {room.State.roomCode}, Session: {room.SessionId}");
+
+                SetupRoomHandlers();
+                SpawnLocalPlayer();
+
+                if (UI.GameUIManager.Instance != null)
+                {
+                    UI.GameUIManager.Instance.SetState(UI.GameState.Waiting);
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Failed to create room: {e.Message}");
+                if (UI.GameUIManager.Instance != null)
+                {
+                    UI.GameUIManager.Instance.SetState(UI.GameState.Menu);
+                }
+            }
+        }
+
+        private async Task JoinRoomByCodeAsync(string roomCode, int skinId)
+        {
+            client = new ColyseusClient(serverUrl);
+
+            try
+            {
+                string roomId = await GetRoomIdByCode(roomCode);
+
+                if (string.IsNullOrEmpty(roomId))
+                {
+                    throw new System.Exception("Room not found");
+                }
+
+                var options = new Dictionary<string, object>
+                {
+                    { "skinId", skinId }
+                };
+
+                room = await client.JoinById<ParkourRoomState>(roomId, options);
+                Debug.Log($"Joined room {roomCode}, Session: {room.SessionId}");
+
+                SetupRoomHandlers();
+                SpawnLocalPlayer();
+
+                if (UI.GameUIManager.Instance != null)
+                {
+                    UI.GameUIManager.Instance.SetState(UI.GameState.Waiting);
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Failed to join room: {e.Message}");
+                if (UI.GameUIManager.Instance != null)
+                {
+                    UI.GameUIManager.Instance.SetState(UI.GameState.Menu);
+                }
+            }
+        }
+
+        private async Task<string> GetRoomIdByCode(string roomCode)
+        {
+            string url = $"http://localhost:2567/api/find-room/{roomCode}";
+            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            {
+                var operation = request.SendWebRequest();
+
+                while (!operation.isDone)
+                {
+                    await Task.Yield();
+                }
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    var response = JsonUtility.FromJson<RoomIdResponse>(request.downloadHandler.text);
+                    return response.roomId;
+                }
+
+                return null;
+            }
+        }
+
+        public void SetPlayerReady(bool ready)
+        {
+            if (room != null)
+            {
+                room.Send("playerReady", new { isReady = ready });
+                Debug.Log($"Sent ready state: {ready}");
+            }
+        }
+    }
+
+    [System.Serializable]
+    public class RoomIdResponse
+    {
+        public string roomId;
+        public int players;
+        public int maxPlayers;
     }
 }

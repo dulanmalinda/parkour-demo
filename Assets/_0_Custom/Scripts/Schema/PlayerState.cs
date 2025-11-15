@@ -31,5 +31,8 @@ namespace ParkourLegion.Schema
 
         [Colyseus.Schema.Type(9, "uint8")]
         public byte skinId = 0;
+
+        [Colyseus.Schema.Type(10, "boolean")]
+        public bool isReady = false;
     }
 }
