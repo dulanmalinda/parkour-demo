@@ -3202,7 +3202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c74c96e466319ad45b18914b3a3abd04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParkourLegion.Networking.NetworkManager
-  serverUrl: ws://localhost:2567
+  serverUrl: wss://parkour-demo-colysues-server.onrender.com
   roomName: parkour
   localPlayerPrefab: {fileID: 1983201314651199400, guid: 2eefa9fe16934d04dae6ba230e5b5a4b, type: 3}
   remotePlayerPrefab: {fileID: 7428352097917500527, guid: eaa401428083f2e42a273e015fb4baf3, type: 3}

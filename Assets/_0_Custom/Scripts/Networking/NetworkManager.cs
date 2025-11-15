@@ -10,7 +10,7 @@ namespace ParkourLegion.Networking
     public class NetworkManager : MonoBehaviour
     {
         [Header("Server Settings")]
-        [SerializeField] private string serverUrl = "ws://localhost:2567";
+        [SerializeField] private string serverUrl = "wss://parkour-demo-colysues-server.onrender.com";
         [SerializeField] private string roomName = "parkour";
 
         [Header("Prefab References")]
@@ -424,7 +424,7 @@ namespace ParkourLegion.Networking
 
         private async Task<string> GetRoomIdByCode(string roomCode)
         {
-            string url = $"http://localhost:2567/api/find-room/{roomCode}";
+            string url = $"https://parkour-demo-colysues-server.onrender.com/api/find-room/{roomCode}";
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
                 var operation = request.SendWebRequest();
