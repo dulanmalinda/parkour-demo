@@ -19,6 +19,7 @@ namespace ParkourLegion.UI
 
         private MenuUI menuUI;
         private LobbyUI lobbyUI;
+        private ClickToResumeOverlay clickToResumeOverlay;
 
         private GameState currentState = GameState.Menu;
         private float lobbyUpdateTimer = 0f;
@@ -54,6 +55,7 @@ namespace ParkourLegion.UI
         {
             menuUI = FindObjectOfType<MenuUI>();
             lobbyUI = FindObjectOfType<LobbyUI>();
+            clickToResumeOverlay = FindObjectOfType<ClickToResumeOverlay>();
 
             if (menuUI == null)
             {
@@ -63,6 +65,14 @@ namespace ParkourLegion.UI
             if (lobbyUI == null)
             {
                 Debug.LogWarning("LobbyUI not found in scene.");
+            }
+
+            if (clickToResumeOverlay == null)
+            {
+                GameObject overlayGO = new GameObject("ClickToResumeOverlay");
+                overlayGO.transform.SetParent(transform, false);
+                clickToResumeOverlay = overlayGO.AddComponent<ClickToResumeOverlay>();
+                Debug.Log("ClickToResumeOverlay created programmatically");
             }
 
             if (gameplayCanvas != null)

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Cinemachine;
 using UnityEngine.EventSystems;
+using System;
 
 namespace ParkourLegion.Camera
 {
@@ -20,6 +21,9 @@ namespace ParkourLegion.Camera
         private CinemachineOrbitalFollow orbitalFollow;
         private CinemachineInputAxisController inputAxisController;
         private CursorLockMode previousLockState = CursorLockMode.None;
+
+        public event Action OnCursorLocked;
+        public event Action OnCursorUnlocked;
 
         private void Start()
         {
@@ -79,11 +83,17 @@ namespace ParkourLegion.Camera
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (Cursor.lockState != CursorLockMode.Locked && !IsPointerOverUI())
+                if (Cursor.lockState != CursorLockMode.Locked && !IsPointerOverUI() && IsInPlayingState())
                 {
                     LockCursor();
                 }
             }
+        }
+
+        private bool IsInPlayingState()
+        {
+            return UI.GameUIManager.Instance != null &&
+                   UI.GameUIManager.Instance.CurrentState == UI.GameState.Playing;
         }
 
         private void DetectExternalCursorUnlock()
@@ -105,12 +115,14 @@ namespace ParkourLegion.Camera
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            OnCursorLocked?.Invoke();
         }
 
         public void UnlockCursor()
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            OnCursorUnlocked?.Invoke();
         }
     }
 }
