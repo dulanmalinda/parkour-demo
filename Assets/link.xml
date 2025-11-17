@@ -1,0 +1,69 @@
+<linker>
+  <!-- Preserve Colyseus SDK core types -->
+  <assembly fullname="ColyseusSDK">
+    <namespace fullname="Colyseus" preserve="all"/>
+    <namespace fullname="Colyseus.Schema" preserve="all"/>
+  </assembly>
+
+  <!-- Preserve GameDevWare.Serialization (used by Colyseus) -->
+  <assembly fullname="GameDevWare.Serialization">
+    <type fullname="*" preserve="all"/>
+  </assembly>
+
+  <!-- Preserve WebSocket library -->
+  <assembly fullname="websocket-sharp">
+    <type fullname="*" preserve="all"/>
+  </assembly>
+
+  <!-- Preserve your schema classes -->
+  <assembly fullname="Assembly-CSharp">
+    <!-- Preserve all schema types -->
+    <namespace fullname="ParkourLegion.Schema" preserve="all"/>
+
+    <!-- Explicitly preserve PlayerState fields -->
+    <type fullname="ParkourLegion.Schema.PlayerState" preserve="all">
+      <field name="id" preserve="all"/>
+      <field name="name" preserve="all"/>
+      <field name="x" preserve="all"/>
+      <field name="y" preserve="all"/>
+      <field name="z" preserve="all"/>
+      <field name="rotY" preserve="all"/>
+      <field name="movementState" preserve="all"/>
+      <field name="isGrounded" preserve="all"/>
+      <field name="lastCheckpoint" preserve="all"/>
+      <field name="skinId" preserve="all"/>
+      <field name="isReady" preserve="all"/>
+    </type>
+
+    <!-- Explicitly preserve ParkourRoomState fields -->
+    <type fullname="ParkourLegion.Schema.ParkourRoomState" preserve="all">
+      <field name="players" preserve="all"/>
+      <field name="raceStartTime" preserve="all"/>
+      <field name="raceStarted" preserve="all"/>
+      <field name="gameState" preserve="all"/>
+      <field name="countdownValue" preserve="all"/>
+      <field name="playerCount" preserve="all"/>
+      <field name="roomCode" preserve="all"/>
+    </type>
+  </assembly>
+
+  <!-- Preserve System.Reflection types used by Colyseus -->
+  <assembly fullname="mscorlib">
+    <namespace fullname="System.Reflection" preserve="all"/>
+    <type fullname="System.Reflection.FieldInfo" preserve="all"/>
+    <type fullname="System.Reflection.PropertyInfo" preserve="all"/>
+    <type fullname="System.Reflection.MethodInfo" preserve="all"/>
+    <type fullname="System.Attribute" preserve="all"/>
+  </assembly>
+
+  <!-- Preserve System types that Colyseus might use -->
+  <assembly fullname="System">
+    <namespace fullname="System.Collections.Generic" preserve="all"/>
+    <namespace fullname="System.Collections.Specialized" preserve="all"/>
+  </assembly>
+
+  <!-- Preserve System.Core types -->
+  <assembly fullname="System.Core">
+    <namespace fullname="System.Linq" preserve="all"/>
+  </assembly>
+</linker>

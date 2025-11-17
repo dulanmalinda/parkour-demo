@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 1}
+  m_AmbientSkyColor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
   m_AmbientEquatorColor: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
   m_AmbientGroundColor: {r: 0.1509434, g: 0.1509434, b: 0.1509434, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -997,7 +997,6 @@ MonoBehaviour:
   - {fileID: 1041578506}
   m_RendererIndex: -1
   m_VolumeLayerMask:
-    serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
@@ -1327,10 +1326,8 @@ MonoBehaviour:
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
   m_RenderingLayersMask:
-    serializedVersion: 0
     m_Bits: 1
   m_ShadowRenderingLayersMask:
-    serializedVersion: 0
     m_Bits: 1
   m_Version: 4
   m_LightLayerMask: 1
@@ -1955,7 +1952,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -65.899994, y: -60.600006}
+  m_AnchoredPosition: {x: -65.90625, y: -60.59375}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &623399951
@@ -2338,6 +2335,10 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: 10fc4df2da32a41aaa32d77bc913491c, type: 2}
+  m_CachedGameObject: {fileID: 832575517}
+  m_PreviousLayer: 0
+  m_PreviousPriority: 0
+  m_InternalProfile: {fileID: 0}
 --- !u!4 &832575519
 Transform:
   m_ObjectHideFlags: 0
@@ -2549,7 +2550,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 1041578506}
-  m_PlaneDistance: 5
+  m_PlaneDistance: 0.5
   m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -2981,7 +2982,6 @@ MonoBehaviour:
   m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
-    serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
@@ -3766,7 +3766,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 1041578506}
-  m_PlaneDistance: 5
+  m_PlaneDistance: 0.5
   m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -4415,8 +4415,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1766859097}
   m_LocalRotation: {x: 0.0000000013969838, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -2}
-  m_LocalScale: {x: 179.1476, y: 179.1476, z: 179.14764}
+  m_LocalPosition: {x: 0, y: 0, z: -113}
+  m_LocalScale: {x: 161.72908, y: 161.72908, z: 161.72911}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1734569804}
@@ -4427,7 +4427,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -202}
+  m_AnchoredPosition: {x: -0, y: -202}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1774742690
