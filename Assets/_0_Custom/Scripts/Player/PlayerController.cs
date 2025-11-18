@@ -17,6 +17,9 @@ namespace ParkourLegion.Player
         [SerializeField] private float groundCheckDistance = 0.2f;
         [SerializeField] private LayerMask groundLayer;
 
+        [Header("Input References")]
+        [SerializeField] private VariableJoystick variableJoystick;
+
         private CharacterController characterController;
         private PlayerInputHandler inputHandler;
         private PlayerPhysics physics;
@@ -45,7 +48,7 @@ namespace ParkourLegion.Player
         private void Awake()
         {
             characterController = GetComponent<CharacterController>();
-            inputHandler = new PlayerInputHandler();
+            inputHandler = new PlayerInputHandler(variableJoystick);
             physics = new PlayerPhysics(gravity, groundCheckDistance, groundLayer);
             stateMachine = new PlayerStateMachine();
 
@@ -105,6 +108,12 @@ namespace ParkourLegion.Player
             if (stateMachine.CurrentState is States.FallState) return 4;
             if (stateMachine.CurrentState is States.SlideState) return 5;
             return 0;
+        }
+
+        public void SetJoystick(VariableJoystick joystick)
+        {
+            inputHandler = new PlayerInputHandler(joystick);
+            Debug.Log($"PlayerController: Joystick assigned - {(joystick != null ? "Active" : "None")}");
         }
 
         private void InitializeStates()

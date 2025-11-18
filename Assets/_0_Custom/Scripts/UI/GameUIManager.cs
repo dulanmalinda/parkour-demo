@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using ParkourLegion.Utilities;
 
 namespace ParkourLegion.UI
 {
@@ -35,6 +36,11 @@ namespace ParkourLegion.UI
         [SerializeField] private Button skinLeftButton;
         [SerializeField] private Button skinRightButton;
         [SerializeField] private Button skinSelectButton;
+
+        [Header("Mobile Controls")]
+        [SerializeField] private Canvas mobileControlsCanvas;
+        [SerializeField] private bool editorSimulateMobile = false;
+        [SerializeField] private bool enableCursorLock = true;
 
         private int currentSkinIndex = 0;
         private int totalSkins = 0;
@@ -85,6 +91,8 @@ namespace ParkourLegion.UI
             }
 
             InitializeSkinSelection();
+
+            SetupMobileControlsVisibility();
 
             SetState(GameState.Menu);
         }
@@ -316,6 +324,11 @@ namespace ParkourLegion.UI
 
         private void SetCursorState(bool locked)
         {
+            if (!enableCursorLock)
+            {
+                return;
+            }
+
             var cameraInput = FindObjectOfType<Camera.CameraInputProvider>();
             if (cameraInput != null)
             {
@@ -382,6 +395,29 @@ namespace ParkourLegion.UI
             {
                 Debug.LogWarning("Cannot send skin change - not connected to server");
             }
+        }
+
+        private void SetupMobileControlsVisibility()
+        {
+            if (mobileControlsCanvas == null)
+            {
+                Debug.LogWarning("GameUIManager: Mobile Controls Canvas not assigned!");
+                return;
+            }
+
+            bool isMobile = false;
+
+#if UNITY_EDITOR
+            isMobile = editorSimulateMobile;
+            Debug.Log($"GameUIManager: Editor mode - Simulate Mobile = {isMobile}");
+#else
+            isMobile = MobileBrowserDetector.IsMobile();
+            Debug.Log($"GameUIManager: Detected platform - {MobileBrowserDetector.GetDeviceInfo()}");
+#endif
+
+            mobileControlsCanvas.gameObject.SetActive(isMobile);
+
+            Debug.Log($"GameUIManager: Mobile Controls Canvas {(isMobile ? "ENABLED" : "DISABLED")}");
         }
     }
 }
