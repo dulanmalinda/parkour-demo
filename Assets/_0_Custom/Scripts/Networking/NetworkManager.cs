@@ -139,11 +139,7 @@ namespace ParkourLegion.Networking
                         RemoveRemotePlayer(key);
                     });
                 }
-            };
-
-            room.OnStateChange += (state, isFirstState) =>
-            {
-                if (!isFirstState)
+                else
                 {
                     if (state.gameState != lastGameState)
                     {
